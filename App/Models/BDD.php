@@ -30,4 +30,5 @@ class BDD
 
         return SELF::$_instance;
     }
+
 }
