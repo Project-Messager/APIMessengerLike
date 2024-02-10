@@ -1,6 +1,8 @@
 <?php
 namespace src\Models;
+use Exception;
 use PDO;
+
 class BDD
 {
     private static $_instance = null;
