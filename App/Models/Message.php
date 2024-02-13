@@ -1,7 +1,7 @@
 <?php
 namespace src\Models;
 use src\Models\BDD;
-class message
+class Message
 {
     private int $Id;
     private string $Body;
@@ -13,7 +13,7 @@ class message
     {
         return $this->Id;
     }
-    public function setId(int $Id): message
+    public function setId(int $Id): Message
     {
         $this->Id = $Id;
         return $this;
@@ -23,7 +23,7 @@ class message
     {
         return $this->Body;
     }
-    public function setBody(string $Body): message
+    public function setBody(string $Body): Message
     {
         $this->Body = $Body;
         return $this;
@@ -34,7 +34,7 @@ class message
     {
         return $this->UserSender;
     }
-    public function setUserSender(int $UserSender): message
+    public function setUserSender(int $UserSender): Message
     {
         $this->UserSender = $UserSender;
         return $this;
@@ -44,7 +44,7 @@ class message
     {
         return $this->UserReceiver;
     }
-    public function setUserReceiver(int $UserReceiver): message
+    public function setUserReceiver(int $UserReceiver): Message
     {
         $this->UserReceiver = $UserReceiver;
         return $this;
@@ -54,7 +54,7 @@ class message
     {
         return $this->SendAt;
     }
-    public function setSendAt(string $SendAt): message
+    public function setSendAt(string $SendAt): Message
     {
         $this->SendAt = $SendAt;
         return $this;
@@ -81,7 +81,7 @@ class message
     {
         try {
             $bdd = BDD::getInstance();
-            $req = $bdd->prepare('SELECT * FROM message WHERE UserSender = :UserSender ORDER BY Id DESC');
+            $req = $bdd->prepare('SELECT * FROM message WHERE UserSender = :UserSender AND UserReceiver = :UserReceiver ORDER BY Id DESC');
             $req->execute();
             $data = $req->fetchAll(\PDO::FETCH_ASSOC);
             $messages = [];
