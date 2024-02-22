@@ -2,7 +2,7 @@
 
 Namespace App\Models;
 use MongoDB\Driver\Exception\Exception;
-use src\Models\BDD;
+use App\Models\BDD;
 
 class User //implements \JsonSerializable
 {
@@ -108,7 +108,7 @@ class User //implements \JsonSerializable
     {
         try {
             $bdd = BDD::getInstance();
-            $req = $bdd->prepare('INSERT INTO user (Name, Password, Mail, FirstName, LastName, ProfilPicture) VALUES (:Name, :Password, :Mail, :FirstName, :LastName, :ProfilPicture)');
+            $req = $bdd->prepare('INSERT INTO users (Name, Password, Mail, FirstName, LastName, ProfilPicture) VALUES (:Name, :Password, :Mail, :FirstName, :LastName, :ProfilPicture)');
             $req->execute([
                 'Name' => $this->Name,
                 'Password' => $this->Password,

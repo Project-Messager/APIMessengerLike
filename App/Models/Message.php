@@ -1,6 +1,6 @@
 <?php
-namespace src\Models;
-use src\Models\BDD;
+namespace App\Models;
+use App\Models\BDD;
 class Message
 {
     private int $Id;
