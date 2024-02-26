@@ -39,12 +39,12 @@ class ApiUserController
             return json_encode("Erreur de méthode (GET attendu)");
         }
 
-        $result = JwtService::checkToken();
-        if ($result['code'] == 1) {
-            return json_encode($result);
-        }
+//        $result = JwtService::checkToken();
+//        if ($result['code'] == 1) {
+//            return json_encode($result);
+//        }
 
-        $user = User::SqlGetUserById($id);
+        $user = User::SqlGetById($id);
         return json_encode($user);
     }
 
