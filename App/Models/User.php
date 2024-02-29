@@ -157,25 +157,52 @@ class User implements \JsonSerializable
         }
     }
 
-    public static function SqlGetById(int $id): ?User
+    public static function SqlGetById(int $id)
     {
         try {
             $bdd = BDD::getInstance();
-            $req = $bdd->prepare('SELECT * FROM user WHERE Id = :Id');
+            $req = $bdd->prepare('SELECT * FROM users WHERE Id = :Id');
             $req->execute([
                 'Id' => $id
             ]);
             $data = $req->fetch(\PDO::FETCH_ASSOC);
             if ($data) {
                 $user = new User();
-                $user->setId($data['Id']);
-                $user->setName($data['Name']);
-                $user->setPassword($data['Password']);
-                $user->setMail($data['Mail']);
-                $user->setFirstName($data['FirstName']);
-                $user->setLastName($data['LastName']);
-                $user->setProfilPicture($data['ProfilPicture']);
+                $user->setId($data['id']);
+                $user->setName($data['username']);
+                $user->setPassword($data['password']);
+                $user->setMail($data['mail']);
+                $user->setFirstName($data['firstname']);
+                $user->setLastName($data['lastname']);
+                $user->setProfilPicture($data['profil_picture']);
                 return [0, "Utilisateur trouvé", $user];
+            } else {
+                return [1, "Utilisateur non trouvé"];
+            }
+        } catch (\Exception $e) {
+            return [1, "Erreur lors de la recherche", $e->getMessage()];
+        }
+    }
+
+    public static function SqlGetByEmail(string $name)
+    {
+        try {
+            $bdd = BDD::getInstance();
+            $req = $bdd->prepare('SELECT * FROM users WHERE mail = :Name');
+            $req->execute([
+                'Name' => $name
+            ]);
+            $data = $req->fetch(\PDO::FETCH_ASSOC);
+            if ($data) {
+                $user = new User();
+                $user->setId($data['id']);
+                $user->setName($data['username']);
+                $user->setPassword($data['password']);
+                $user->setMail($data['mail']);
+                $user->setFirstName($data['firstname']);
+                $user->setLastName($data['lastname']);
+                $user->setProfilPicture($data['profil_picture']);
+                return $user;
             } else {
                 return [1, "Utilisateur non trouvé"];
             }

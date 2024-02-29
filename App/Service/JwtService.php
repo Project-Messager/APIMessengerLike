@@ -13,7 +13,7 @@ class JwtService
     {
         $issuedAt = new \DateTime(); //Date de publication
         $expire = new \DateTime();
-        $expire->modify('+6 minutes');
+        $expire->modify('+60 minutes');
 
         $data = [
             "iat" => $issuedAt->getTimestamp(), // Date création

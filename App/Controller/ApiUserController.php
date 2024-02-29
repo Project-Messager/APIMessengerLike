@@ -23,8 +23,9 @@ class ApiUserController
         }
 
         $user = new User();
+        $hashpass = password_hash($_POST["password"], PASSWORD_BCRYPT, ["cost"=>12]);
         $user->setName($_POST['name']);
-        $user->setPassword($_POST['password']);
+        $user->setPassword($hashpass);
         $user->setMail($_POST['mail']);
         $user->setFirstName($_POST['firstName']);
         $user->setLastName($_POST['lastName']);
@@ -33,63 +34,43 @@ class ApiUserController
         return json_encode($result);
     }
 
-    public function getAllById(int $id)
+    public function getById(int $id)
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
             return json_encode("Erreur de méthode (GET attendu)");
         }
 
-//        $result = JwtService::checkToken();
-//        if ($result['code'] == 1) {
-//            return json_encode($result);
-//        }
+        $result = JwtService::checkToken();
+        if ($result['code'] == 1) {
+            return json_encode($result);
+        }
 
         $user = User::SqlGetById($id);
         return json_encode($user);
     }
 
-    public function UpdateUser()
+    public function login()
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
-            return json_encode("Erreur de méthode (PUT attendu)");
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return json_encode("Erreur de méthode (POST attendu)");
         }
 
-        $result = JwtService::checkToken();
-        if ($result['code'] == 1) {
-            return json_encode($result);
-        }
-
-        if (!isset($_POST['id']) || !isset($_POST['name']) || !isset($_POST['password']) || !isset($_POST['mail']) || !isset($_POST['firstName']) || !isset($_POST['lastName'])) {
+        if (!isset($_POST['email']) || !isset($_POST['password'])) {
             return json_encode("Erreur, il manque des données");
         }
 
-        $user = new User();
-        $user->setId($_POST['id']);
-        $user->setName($_POST['name']);
-        $user->setPassword($_POST['password']);
-        $result = $user->SqlUpdateUser();
-        return json_encode($result);
-    }
+        $user = User::SqlGetByEmail($_POST['email']);
 
-    public function DeleteUser()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
-            return json_encode("Erreur de méthode (DELETE attendu)");
+        if ($user) {
+            if (password_verify($_POST['password'], $user->getPassword())) {
+                $jwt = JwtService::createToken([
+                    "mail" => $user->getMail(),
+                    "name" => $user->getName(),
+                ]);
+                return json_encode($jwt);
+            }
         }
-
-        $result = JwtService::checkToken();
-        if ($result['code'] == 1) {
-            return json_encode($result);
-        }
-
-        if (!isset($_POST['id'])) {
-            return json_encode("Erreur, il manque des données");
-        }
-
-        $user = new User();
-        $user->setId($_POST['id']);
-        $result = $user->SqlDeleteUser();
-        return json_encode($result);
+        return json_encode("Erreur, nom d'utilisateur ou mot de passe incorrect");
     }
 }
 
