@@ -1,6 +1,6 @@
 <?php
-namespace src\Models;
-use src\Models\BDD;
+namespace App\Models;
+use App\Models\BDD;
 class Message
 {
     private int $Id;
@@ -60,15 +60,15 @@ class Message
         return $this;
     }
 
-    public function SqlAddMessage(int $UserSender, int $UserReceiver, string $Body)
+    public function SqlAddMessage(): array
     {
         try {
             $bdd = BDD::getInstance();
-            $req = $bdd->prepare('INSERT INTO message (UserSender, UserReceiver, Body, SendAt) VALUES (:UserSender, :UserReceiver, :Body, :SendAt)');
+            $req = $bdd->prepare('INSERT INTO message (user_sender, user_receiver, body, Send_at) VALUES (:UserSender, :UserReceiver, :Body, :SendAt)');
             $req->execute([
-                'UserSender' => $UserSender,
-                'UserReceiver' => $UserReceiver,
-                'Body' => $Body,
+                'UserSender' => $this->UserSender,
+                'UserReceiver' => $this->UserReceiver,
+                'Body' => $this->Body,
                 'SendAt' => date('Y-m-d H:i:s')
             ]);
             return [0, "Message envoyé"];
@@ -81,20 +81,29 @@ class Message
     {
         try {
             $bdd = BDD::getInstance();
-            $req = $bdd->prepare('SELECT * FROM message WHERE UserSender = :UserSender AND UserReceiver = :UserReceiver ORDER BY Id DESC');
+            $req = $bdd->prepare('SELECT * FROM message WHERE user_sender = :UserSender AND user_receiver = :UserReceiver ORDER BY Id DESC');
+            $req->bindParam(':UserSender', $_POST['idUserSender']);
+            $req->bindParam(':UserReceiver', $_POST['idUserReceiver']);
             $req->execute();
             $data = $req->fetchAll(\PDO::FETCH_ASSOC);
-            $messages = [];
-            foreach ($data as $d) {
-                $message = new message();
-                $message->setId($d['Id']);
-                $message->setBody($d['Body']);
-                $message->setUserSender($d['UserSender']);
-                $message->setUserReceiver($d['UserReceiver']);
-                $message->setSendAt($d['SendAt']);
-                $messages[] = $message;
-            }
-            return [0, "Utilisateurs trouvés", $messages];
+            $messages = $data;
+            return [0, "Messages trouvés", $messages];
+        } catch (\Exception $e) {
+            return [1, "Erreur lors de la recherche", $e->getMessage()];
+        }
+    }
+
+    public static function SqlGetLastMessageById()
+    {
+        try {
+            $bdd = BDD::getInstance();
+            $req = $bdd->prepare('SELECT * FROM message WHERE user_sender = :UserSender AND user_receiver = :UserReceiver ORDER BY Id DESC LIMIT 1');
+            $req->bindParam(':UserSender', $_POST['idUserSender']);
+            $req->bindParam(':UserReceiver', $_POST['idUserReceiver']);
+            $req->execute();
+            $data = $req->fetch(\PDO::FETCH_ASSOC);
+            $message = $data;
+            return [0, "Message trouvé", $message];
         } catch (\Exception $e) {
             return [1, "Erreur lors de la recherche", $e->getMessage()];
         }

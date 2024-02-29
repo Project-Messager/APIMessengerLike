@@ -34,10 +34,10 @@ class ApiMessageController
         return json_encode($result);
     }
 
-    public function getAllById(int $id)
+    public function getAllById()
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-            return json_encode("Erreur de méthode (GET attendu)");
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return json_encode("Erreur de méthode (POST attendu)");
         }
 
         $result = JwtService::checkToken();
@@ -45,8 +45,31 @@ class ApiMessageController
             return json_encode($result);
         }
 
+        if (!isset($_POST['idUserSender']) || !isset($_POST['idUserReceiver'])) {
+            return json_encode("Erreur, il manque des données");
+        }
+
         $messages = Message::SqlGetAllMessageById();
         return json_encode($messages);
+    }
+
+    public function getLastMessageById()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return json_encode("Erreur de méthode (POST attendu)");
+        }
+
+        $result = JwtService::checkToken();
+        if ($result['code'] == 1) {
+            return json_encode($result);
+        }
+
+        if (!isset($_POST['idUserSender']) || !isset($_POST['idUserReceiver'])) {
+            return json_encode("Erreur, il manque des données");
+        }
+
+        $message = Message::SqlGetLastMessageById();
+        return json_encode($message);
     }
 
     public function UpdateMessage(){
