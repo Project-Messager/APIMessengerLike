@@ -72,6 +72,27 @@ class ApiMessageController
         return json_encode($message);
     }
 
+    public function getAllConversation(int $idUserSender){
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            return json_encode("Erreur de méthode (GET attendu)");
+        }
+
+//        $result = JwtService::checkToken();
+//        if ($result['code'] == 1) {
+//            return json_encode($result);
+//        }
+
+        $messages = Message::SqlGetAllConversation($idUserSender);
+
+        foreach ($messages as $message){
+           $bodyMessage = Message::SqlGetLastMessageById();
+           var_dump($bodyMessage);
+           $message->setBody($bodyMessage->getBody());
+        }
+
+        return json_encode($messages);
+    }
+
     public function UpdateMessage(){
         if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
             return json_encode("Erreur de méthode (PUT attendu)");

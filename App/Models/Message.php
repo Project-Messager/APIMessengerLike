@@ -109,5 +109,32 @@ class Message
         }
     }
 
+    public static function SqlGetAllMessage()
+    {
+        try {
+            $bdd = BDD::getInstance();
+            $req = $bdd->prepare('SELECT * FROM message ORDER BY Id DESC');
+            $req->execute();
+            $data = $req->fetchAll(\PDO::FETCH_ASSOC);
+            $messages = $data;
+            return [0, "Messages trouvés", $messages];
+        } catch (\Exception $e) {
+            return [1, "Erreur lors de la recherche", $e->getMessage()];
+        }
+    }
 
+    public static function SqlGetAllConversation(int $idUserSender) {
+        try {
+            $bdd = BDD::getInstance();
+            $req = $bdd->prepare('SELECT DISTINCT user_sender, user_receiver FROM message WHERE user_sender = :UserSender');
+            $req->bindParam(':UserSender', $idUserSender);
+            $req->execute();
+            $data = $req->fetchAll(\PDO::FETCH_ASSOC);
+            $conversations = $data;
+            return [0, "Conversations trouvés", $conversations];
+        }
+        catch (\Exception $e) {
+            return [1, "Erreur lors de la recherche", $e->getMessage()];
+        }
+    }
 }

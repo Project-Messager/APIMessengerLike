@@ -67,7 +67,12 @@ class ApiUserController
                     "mail" => $user->getMail(),
                     "name" => $user->getName(),
                 ]);
-                return json_encode($jwt);
+
+                $result = array(
+                    "id" => $user->getId(),
+                    "token" => $jwt
+                );
+                return json_encode($result);
             }
         }
         return json_encode("Erreur, nom d'utilisateur ou mot de passe incorrect");
