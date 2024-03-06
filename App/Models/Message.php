@@ -93,17 +93,17 @@ class Message
         }
     }
 
-    public static function SqlGetLastMessageById()
+    public static function SqlGetLastMessageById(int $idUserSender, int $idUserReceiver)
     {
         try {
             $bdd = BDD::getInstance();
             $req = $bdd->prepare('SELECT * FROM message WHERE user_sender = :UserSender AND user_receiver = :UserReceiver ORDER BY Id DESC LIMIT 1');
-            $req->bindParam(':UserSender', $_POST['idUserSender']);
-            $req->bindParam(':UserReceiver', $_POST['idUserReceiver']);
+            $req->bindParam(':UserSender', $idUserSender);
+            $req->bindParam(':UserReceiver', $idUserReceiver);
             $req->execute();
             $data = $req->fetch(\PDO::FETCH_ASSOC);
             $message = $data;
-            return [0, "Message trouvé", $message];
+            return $message;
         } catch (\Exception $e) {
             return [1, "Erreur lors de la recherche", $e->getMessage()];
         }
@@ -131,7 +131,7 @@ class Message
             $req->execute();
             $data = $req->fetchAll(\PDO::FETCH_ASSOC);
             $conversations = $data;
-            return [0, "Conversations trouvés", $conversations];
+            return $conversations;
         }
         catch (\Exception $e) {
             return [1, "Erreur lors de la recherche", $e->getMessage()];

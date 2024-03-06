@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Models\Message;
 use App\Service\JwtService;
+use function Sodium\add;
 
 class ApiMessageController
 {
@@ -68,7 +69,7 @@ class ApiMessageController
             return json_encode("Erreur, il manque des données");
         }
 
-        $message = Message::SqlGetLastMessageById();
+        $message = Message::SqlGetLastMessageById($_POST['idUserSender'], $_POST['idUserReceiver']);
         return json_encode($message);
     }
 
@@ -83,14 +84,16 @@ class ApiMessageController
 //        }
 
         $messages = Message::SqlGetAllConversation($idUserSender);
-
+        $datas = [];
         foreach ($messages as $message){
-           $bodyMessage = Message::SqlGetLastMessageById();
-           var_dump($bodyMessage);
-           $message->setBody($bodyMessage->getBody());
+           $bodyMessage = Message::SqlGetLastMessageById($message['user_sender'], $message['user_receiver']);
+
+            $message["body"] = $bodyMessage['body'];
+            $message["send_at"] = $bodyMessage['Send_at'];
+            $datas[] = $message;
         }
 
-        return json_encode($messages);
+        return json_encode($datas);
     }
 
     public function UpdateMessage(){
