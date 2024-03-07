@@ -38,7 +38,6 @@ class ApiUserController
         if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
             return json_encode("Erreur de méthode (GET attendu)");
         }
-
         $result = JwtService::checkToken();
         if ($result['code'] == 1) {
             return json_encode($result);
