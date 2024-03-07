@@ -34,6 +34,20 @@ class ApiUserController
         return json_encode($result);
     }
 
+    public function getAll(){
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            return json_encode("Erreur de méthode (GET attendu)");
+        }
+
+        $result = JwtService::checkToken();
+        if ($result['code'] == 1) {
+            return json_encode($result);
+        }
+
+        $users = User::SqlGetAll();
+        return json_encode($users);
+    }
+
     public function getById(int $id)
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
