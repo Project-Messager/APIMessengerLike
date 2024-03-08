@@ -37,8 +37,8 @@ class ApiMessageController
 
     public function getAllById()
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return json_encode("Erreur de méthode (POST attendu)");
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            return json_encode("Erreur de méthode (GET attendu)");
         }
 
         $result = JwtService::checkToken();
@@ -46,7 +46,7 @@ class ApiMessageController
             return json_encode($result);
         }
 
-        if (!isset($_POST['idUserSender']) || !isset($_POST['idUserReceiver'])) {
+        if (!isset($_GET['idUserSender']) || !isset($_GET['idUserReceiver'])) {
             return json_encode("Erreur, il manque des données");
         }
 
@@ -56,8 +56,8 @@ class ApiMessageController
 
     public function getLastMessageById()
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return json_encode("Erreur de méthode (POST attendu)");
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            return json_encode("Erreur de méthode (GET attendu)");
         }
 
         $result = JwtService::checkToken();
@@ -65,11 +65,11 @@ class ApiMessageController
             return json_encode($result);
         }
 
-        if (!isset($_POST['idUserSender']) || !isset($_POST['idUserReceiver'])) {
+        if (!isset($_GET['idUserSender']) || !isset($_GET['idUserReceiver'])) {
             return json_encode("Erreur, il manque des données");
         }
 
-        $message = Message::SqlGetLastMessageById($_POST['idUserSender'], $_POST['idUserReceiver']);
+        $message = Message::SqlGetLastMessageById($_GET['idUserSender'], $_GET['idUserReceiver']);
         return json_encode($message);
     }
 
@@ -97,8 +97,8 @@ class ApiMessageController
     }
 
     public function UpdateMessage(){
-        if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
-            return json_encode("Erreur de méthode (PUT attendu)");
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return json_encode("Erreur de méthode (POST attendu)");
         }
 
         $result = JwtService::checkToken();
