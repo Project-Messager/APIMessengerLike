@@ -11,17 +11,17 @@ Documentation pour la classe `ApiMessageController` :
    3. Données en sortie : JSON contenant le résultat de l'ajout du message
 
 2. **Fonction pour récupérer tous les messages par ID d'utilisateur émetteur et récepteur :**
-   1. Méthode GET : http://localhost/ApiMessage/getAllById?idUserSender={idUserSender}&idUserReceiver={idUserReceiver}
+   1. Méthode GET : http://localhost/ApiMessage/getAllById
    2. Données en entrées : idUserSender, idUserReceiver
    3. Données en sortie : JSON contenant des objets de tous les champs de tous les messages
 
 3. **Fonction pour récupérer le dernier message par ID d'utilisateur émetteur et récepteur :**
-   1. Méthode GET : http://localhost/ApiMessage/getLastMessageById?idUserSender={idUserSender}&idUserReceiver={idUserReceiver}
+   1. Méthode GET : http://localhost/ApiMessage/getLastMessageById
    2. Données en entrées : idUserSender, idUserReceiver
    3. Données en sortie : JSON contenant les champs du dernier message
 
 4. **Fonction pour récupérer toutes les conversations d'un utilisateur émetteur :**
-   1. Méthode GET : http://localhost/ApiMessage/getAllConversation?idUserSender={idUserSender}
+   1. Méthode GET : http://localhost/ApiMessage/getAllConversation
    2. Données en entrées : idUserSender
    3. Données en sortie : JSON contenant des objets de tous les champs de tous les messages, avec les derniers messages de chaque conversation
 
